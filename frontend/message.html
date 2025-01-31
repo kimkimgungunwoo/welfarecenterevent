@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/background.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/header.css">
+    <title>MESSAGE</title>
+</head>
+<body>
+<div id="header"></div>
+<div class="main-container">
+
+
+</div>
+<script src="js/header.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded",async ()=>{
+        const url=new URLSearchParams(window.location.search);
+        const post_id=url.get("id")
+        try{
+            const response=await fetch(`http://localhost:8000/api/${post_id}`);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data=await response.json()
+            const type=data.type;
+            sessionStorage.setItem('type', type);
+            const username=data.author_name;
+            const content=data.content;
+            const messageContainer=document.createElement("div");
+            const MainContainer=document.querySelector(".main-container")
+            const buttonContainer=document.createElement("div");
+            MainContainer.innerHTML=""
+            messageContainer.className="box-container";
+            messageContainer.innerHTML=`
+                <div class="top-box">
+                    <img src="assets/images/type${type}.png" class="paper-image">
+                </div>
+                <div class="message-box">
+                    <h1>${username}</h1>
+                    <i>${content}</i>
+                </div>
+
+            `
+            buttonContainer.className="message-button-container";
+            buttonContainer.innerHTML=`
+            <a href="information.html?type=${type}"><button id="information">편지지정보</button></a>
+            <a href="delet_message.html?id=${post_id}"><button id="delete">삭제</button></a>
+            `
+
+            MainContainer.appendChild(messageContainer);
+            MainContainer.appendChild(buttonContainer)
+
+        }
+        catch (error){
+            console.error("error",error);
+        }
+
+        const InfoButton=document.getElementById("information");
+        const DelButton=document.getElementById("delete");
+
+
+
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #FFF9E6;
+    background-image: url('../assets/images/background2.jpg');
+    background-repeat: no-repeat;
+    background-position: center bottom; /* 이미지의 하단 중앙 정렬 */
+    background-size: auto 50vh; /* 데스크톱: 높이 50%로 설정, 너비는 비율 유지 */
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    min-height: 100vh; /* 화면 최소 높이 */
+}
+
+main {
+    flex: 1;
+    padding-bottom: 150px;
+}
+
+@media (max-width: 768px) {
+    body {
+        background-size: auto 40vh; /* 모바일: 높이 40%로 설정, 너비는 비율 유지 */
+        background-position: center bottom; /* 이미지의 하단 중앙 정렬 */
+    }
+}

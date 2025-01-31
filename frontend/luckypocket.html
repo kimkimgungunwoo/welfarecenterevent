@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랜덤 박스 뽑기</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/background.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none; /* 테두리 제거 */
+        }
+
+        .luckypocket {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            border: none;
+        }
+
+        .luckypocket h1 {
+            font-size: 1.5rem;
+            color: black;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .preview-image {
+            width: 100px;
+            height: 100px;
+            margin: 15px 0;
+            object-fit: cover;
+            border: none;
+        }
+
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        .paper {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            border: none;
+        }
+
+        .paper.hidden {
+            display: none;
+            border: none;
+        }
+    </style>
+</head>
+<body class="background-page">
+<div id="header"></div>
+<div class="main-container">
+    <div class="container">
+        <!-- A 요소 -->
+        <div class="luckypocket" id="box-a">
+            <h1>편지지를 뽑으세요</h1>
+            <img src="assets/images/luckybag.png" alt="Lucky Bag" class="preview-image">
+            <button class="button" id="draw-button">편지지 뽑기</button>
+        </div>
+
+        <!-- B 요소 (초기에는 숨김) -->
+        <div class="paper hidden" id="box-b">
+            <h1 id="paper-type"></h1>
+            <img src="assets/images/type1.png" alt="Selected Paper" class="preview-image">
+            <button class="button" id="info-button">편지지 정보</button>
+            <button class="button" id="write-button">편지쓰기</button>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const drawButton = document.getElementById('draw-button');
+        const writeButton=document.getElementById('write-button');
+        const InfoButton=document.getElementById('info-button');
+        const boxA = document.getElementById('box-a');
+        const boxB = document.getElementById('box-b');
+        const previewImage = boxB.querySelector('.preview-image');
+        const paperList=["복조리","원앙","강강술래","첨성대","장승","학","해태","비빔밥","가마","옹기"]
+        // 랜덤 편지지 번호 생성 및 저장
+        drawButton.addEventListener('click', () => {
+            const randomNumber = Math.floor(Math.random() * 10) + 1; // 1~7 번호
+
+            // Session Storage에 번호 저장
+            sessionStorage.setItem('type', randomNumber);
+
+            // B 요소에 이미지 설정
+            previewImage.src = `assets/images/type${randomNumber}.png`;
+            const paperName=document.getElementById("paper-type");
+            paperName.textContent=`${paperList[randomNumber-1]}`
+            // A 요소 완전히 제거
+            boxA.remove();
+
+            // B 요소 표시
+            boxB.classList.remove('hidden');
+        });
+
+        writeButton.addEventListener('click',()=>{
+            window.location.href=`edit_message.html`;
+        })
+
+        InfoButton.addEventListener('click',()=>{
+            window.location.href=`information.html`;
+        })
+
+
+    });
+</script>
+
+</body>
+</html>

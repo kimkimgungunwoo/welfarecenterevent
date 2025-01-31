@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/background.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/main.css">
+    <title>Main</title>
+</head>
+<body class="background-page">
+<div id="header"></div>
+<div class="main-page-container">
+    <div class="paper-grid-container">
+        <!-- 데이터가 동적으로 추가될 영역 -->
+    </div>
+    <div class="button-container">
+        <button class="bi bi-arrow-left" id="left-button" aria-label="Previous"></button>
+        <button class="bi bi-arrow-right" id="right-button" aria-label="Next"></button>
+    </div>
+</div>
+<script src="js/header.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const paperGridContainer = document.querySelector(".paper-grid-container");
+        const prevButton = document.getElementById("left-button");
+        const nextButton = document.getElementById("right-button");
+        const limit = 9;
+        let currentPage = 0;
+        let totalPages = 0;
+
+        // 서버에서 데이터를 가져오는 함수
+        async function fetchPapers(page) {
+            const offset = page * limit;
+            let url;
+
+            // 검색어 확인
+            const searchKeyword = localStorage.getItem("searchKeyword");
+
+            // 검색어가 있으면 검색 API 호출, 없으면 일반 API 호출
+            if (searchKeyword) {
+                url = `http://localhost:8000/api/search?username=${encodeURIComponent(searchKeyword)}&limit=${limit}&offset=${offset}`;
+            } else {
+                url = `http://localhost:8000/api?limit=${limit}&offset=${offset}`;
+            }
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                totalPages = Math.ceil(data.total / limit);
+
+                renderPapers(data.posts);
+                updateButtons();
+
+                // 검색어 초기화 (다음 요청에서는 일반 모드로 돌아가게 함)
+                if (searchKeyword) {
+                    localStorage.removeItem("searchKeyword");
+                }
+            } catch (error) {
+                console.error("Error fetching papers:", error);
+            }
+        }
+
+        // 데이터를 기반으로 DOM에 그리드 생성
+        function renderPapers(posts) {
+            paperGridContainer.innerHTML = "";
+            posts.forEach(post => {
+                const paperContainer = document.createElement("div");
+                paperContainer.className = "paper-container";
+                paperContainer.innerHTML = `
+                        <div class="nametag">
+                            <i>${post.author_name}</i>
+                        </div>
+                        <div class="paper">
+                            <a href="message.html?id=${post.post_id}">
+                                <img src="assets/images/type${post.type}.png" alt="Paper Image">
+                            </a>
+                        </div>
+                    `;
+                paperGridContainer.appendChild(paperContainer);
+            });
+        }
+
+        // 이전/다음 버튼 상태 업데이트
+        function updateButtons() {
+            prevButton.disabled = currentPage === 0;
+            nextButton.disabled = currentPage === totalPages - 1;
+        }
+
+        // 이전 버튼 이벤트
+        prevButton.addEventListener("click", () => {
+            if (currentPage > 0) {
+                currentPage--;
+                fetchPapers(currentPage);
+            }
+        });
+
+        // 다음 버튼 이벤트
+        nextButton.addEventListener("click", () => {
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                fetchPapers(currentPage);
+            }
+        });
+
+        // 초기 데이터 로드
+        await fetchPapers(currentPage);
+    });
+</script>
+</body>
+</html>

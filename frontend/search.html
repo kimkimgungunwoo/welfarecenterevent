@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/background.css">
+    <link rel="stylesheet" href="css/common.css">
+    <title>Search</title>
+</head>
+<body>
+<div class="main-container">
+    <div class="box-container">
+        <div class="top-box">
+            <i class="bi bi-search"></i>
+        </div>
+        <div class="name-box">
+            <h1>이름 입력하세요</h1>
+            <input type="text" placeholder="이름 입력하세요" id="search-name" required>
+            <button type="submit" id="search-submit">검색</button>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded",()=>{
+        const SearchButton=document.getElementById("search-submit");
+        if (SearchButton){
+            SearchButton.addEventListener("click",async function (event){
+                event.preventDefault();
+                const searchName=document.getElementById("search-name").value;
+                localStorage.setItem("searchKeyword",searchName);
+                window.location.href="main.html"
+
+            })
+        }
+    })
+
+
+</script>

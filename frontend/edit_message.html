@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/background.css">
+    <link rel="stylesheet" href="css/header.css">
+    <title>edit-message</title>
+    <style>
+        .photo-preview {
+            display: none; /* 미리보기 숨김 */
+        }
+    </style>
+</head>
+<body class="background-page">
+<div id="header"></div>
+<div class="main-container">
+    <div class="box-container">
+        <div class="top-box">
+            <i class="bi bi-pencil-square"></i>
+        </div>
+        <input type="text" placeholder="이름을 입력하세요" id="name" required>
+        <input type="text" placeholder="비밀번호를 입력하세요" id="password" required>
+        <div class="textarea-container">
+            <label for="content">내용을 입력하세요</label>
+            <textarea id="content" placeholder="내용을 입력하세요"></textarea>
+        </div>
+    </div>
+    <input type="file" id="file-input" accept="image/*" style="display: none;">
+    <button id="photo">사진 업로드</button>
+    <button id="submit" type="submit">제출</button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const photoButton = document.getElementById("photo");
+        const fileInput = document.getElementById("file-input");
+        const submitButton = document.getElementById("submit");
+        const contentTextarea = document.getElementById("content");
+
+        // 사진 업로드 버튼 클릭 시 파일 선택 창 열기
+        photoButton.addEventListener("click", () => {
+            fileInput.click();
+        });
+
+        // 파일 선택 후 OCR API 호출
+        fileInput.addEventListener("change", async () => {
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("이미지를 선택해주세요.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                const response = await fetch("http://localhost:8000/api/photo", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    contentTextarea.value = data.result; // OCR 결과를 텍스트에 반영
+                } else {
+                    alert("OCR 요청 실패");
+                }
+            } catch (error) {
+                alert("오류 발생: " + error);
+            }
+        });
+
+        // 제출 버튼 클릭 이벤트
+        submitButton.addEventListener("click", async function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById("name").value;
+            const password = document.getElementById("password").value;
+            const type = sessionStorage.getItem("type");
+            const content = contentTextarea.value;
+
+            const formData = new FormData();
+            formData.append("content", content);
+            formData.append("author_name", username);
+            formData.append("type", type);
+            formData.append("password", password);
+
+            try {
+                const response = await fetch(`http://localhost:8000/api`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        'content': content,
+                        'author_name': username,
+                        'type': type,
+                        'password': password,
+                    }),
+                });
+                console.log(JSON.stringify({
+                    'content': content,
+                    'author_name': username,
+                    'type': type,
+                    'password': password,
+                }));
+                if (response.ok) {
+                    alert("등록되었습니다");
+                    window.location.href = `main.html`;
+                }
+            } catch (error) {
+                alert("오류 발생: " + error);
+            }
+        });
+    });
+</script>
+</body>
+</html>

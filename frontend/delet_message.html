@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/background.css">
+    <link rel="stylesheet" href="css/common.css">
+    <title>Delete</title>
+</head>
+<body>
+<div class="main-container">
+    <div class="box-container">
+        <div class="top-box">
+            <i class="bi bi-trash-fill"></i>
+        </div>
+        <div class="name-box">
+            <h1>비밀번호를 입력하세요</h1>
+            <input type="text" placeholder="비밀번호를 입력하세요" id="password" required>
+            <button type="submit" id="password-submit">삭제</button>
+        </div>
+
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded",()=>{
+        const passwordsubmitbutton=document.getElementById("password-submit");
+        if(passwordsubmitbutton){
+            passwordsubmitbutton.addEventListener("click",async function (event){
+                event.preventDefault();
+                const password=document.getElementById("password").value;
+                let PostUrl=new URLSearchParams(window.location.search);
+                const postId=PostUrl.get("id");
+                deleteurl=`http://localhost:8000/api/${postId}/del`;
+                try{
+                    const response=await fetch(deleteurl,{
+                        method:"DELETE",
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        body:JSON.stringify({
+                            "password":password,
+                        })
+                    });
+                    const result=await response.json();
+                    if (result.success){
+                        alert("성공")
+                        window.location.href="main.html";
+
+                    }
+                    else{
+                        alert("비밀번호가 다릅니다")
+                    }
+
+                }
+                catch (error){
+                    console.error(
+                        "Error:",error
+                    );
+                }
+
+            })
+        }
+    });
+</script>
+
+
+</body>

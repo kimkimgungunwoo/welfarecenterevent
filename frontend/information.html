@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/background.css">
+    <link rel="stylesheet" href="css/header.css">
+
+    <title>Information</title>
+</head>
+<body class="background-page">
+<div id="header"></div>
+<div class="main-container">
+    <div class="box-container">
+        <div class="top-box">
+            <img id="type-image" src="assets/images/type2.png" alt="Image">
+        </div>
+        <div class="info-box">
+            <h1 id="title"></h1>
+            <div class="info-detail">
+                <h2 id="description"></h2>
+            </div>
+        </div>
+    </div>
+    <button id="get-back">뒤로가기</button>
+</div>
+
+<script src="js/header.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const type = sessionStorage.getItem("type");
+        const paperList = [
+            "복조리", "원앙", "강강술래", "첨성대", "장승", "학", "해태", "비빔밥", "가마", "옹기"
+        ];
+
+        const infoList = [
+            "복조리는 새해에 복을 담아오기를 기원하며 걸어 두는 우리나라의 전통 물건입니다.\n이것은 쌀을 깨끗하게 고르는 데 사용되며, 한 해의 복과 풍요를 빌며 집 안에 걸어두던 전통을 가지고 있습니다.\n또한 풍요, 행운, 그리고 복을 담는 마음을 상징합니다!",
+            "원앙은 평생 짝을 이루며 함께 살아가는 아름다운 새입니다.\n이것은 부부의 사랑과 화합을 상징하며 결혼식 등에서 서로의 사랑과 행복을 기원하던 전통을 가지고 있습니다.\n또한 영원한 사랑과 조화로운 삶을 상징합니다!",
+            "강강술래는 사람들이 밤하늘 아래 손을 잡고 둥글게 돌며 부르던 우리나라의 전통 춤입니다.\n이것은 풍년을 기원하거나 마을 사람들끼리 화합을 다지며 즐기던 전통을 가지고 있습니다.\n또한 함께하는 즐거움과 조화로운 공동체의 힘을 상징합니다!",
+            "첨성대는 옛날 신라 시대에 하늘의 별과 천체를 관측하던 천문대입니다.\n이것은 하늘의 움직임을 살피며 농사와 계절을 예측하고, 자연의 질서를 이해하려던 전통을 가지고 있습니다.\n또한 자연과 조화를 이루며 지혜롭게 살아가려는 인간의 노력을 상징합니다!",
+            "장승은 마을 입구에서 나쁜 기운을 막고 마을을 지켜주던 수호신입니다.\n이것은 마을 사람들의 안전과 행복을 기원하며 소원을 비는 전통을 가지고 있습니다.\n또한 평화와 안전, 그리고 서로를 위한 따뜻한 마음을 상징합니다!",
+            "학은 우아하고 고귀한 모습으로 오래전부터 사랑받아 온 상징적인 새입니다.\n이것은 장수와 평화를 기원하며 그림이나 장식품에 자주 등장하던 전통을 가지고 있습니다.\n또한 고귀함, 장수, 그리고 평화로운 삶을 상징합니다!",
+            "해태는 진실과 정의를 지키는 상상 속의 동물입니다.\n이것은 나쁜 기운을 물리치고, 정의롭고 올바른 사회를 만들고자 하는 전통을 가지고 있습니다.\n또한 진실, 정의, 그리고 보호의 상징입니다!",
+            "비빔밥은 다양한 재료를 한 그릇에 담아 비벼 먹는 대표적인 전통 음식입니다.\n이것은 각기 다른 재료들이 어우러져 조화를 이루며 맛과 영양을 즐기던 전통을 가지고 있습니다.\n또한 조화와 균형, 그리고 모두가 함께 어울리는 화합을 상징합니다!",
+            "가마는 옛날 사람들이 타고 이동하던 전통적인 운송 수단입니다.\n이것은 귀한 사람을 안전하고 편안하게 모시며 이동하던 전통을 가지고 있습니다.\n또한 존중과 예우, 그리고 평안한 여정을 기원하는 마음을 상징합니다!",
+            "옹기는 흙으로 빚어 불에 구워 만든 전통적인 그릇입니다.\n이것은 음식을 저장하고 발효시키며 자연의 재료로 건강하게 살아가던 전통을 가지고 있습니다.\n또한 자연과의 조화, 풍요로움, 그리고 오래도록 나눔을 이어가는 삶을 상징합니다!"
+        ];
+
+        const index = type-1;
+
+        document.getElementById("title").textContent = paperList[index];
+        document.getElementById("description").textContent = infoList[index];
+        document.getElementById("type-image").src = `assets/images/type${type}.png`;
+
+
+        document.getElementById("get-back").addEventListener("click", () => {
+            window.history.back();
+        });
+    });
+</script>
+</body>
+</html>
