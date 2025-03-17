@@ -20,7 +20,7 @@ if not api_url:
 if not secret_key:
     raise ValueError("SECRET_KEY is not set. Please check your environment variables.")
 
-@router.post("", response_model=schema.PostInfo)
+@router.post("/", response_model=schema.PostInfo)
 def create_post(post: schema.CreatePost, db: Session = Depends(get_db)):
     user_posts = crud.read_post_by_username(post.author_name, db)
     if user_posts and len(user_posts) >= 7:
@@ -28,7 +28,7 @@ def create_post(post: schema.CreatePost, db: Session = Depends(get_db)):
     new_post = crud.create_post(post, db)
     return new_post
 
-@router.get("", response_model=schema.PostInfoList)
+@router.get("/", response_model=schema.PostInfoList)
 def read_posts(limit:int=9,offset:int=0,db: Session = Depends(get_db)):
     total,posts=crud.read_post(db, limit=limit, offset=offset)
     return {"total": total, "posts": posts}
@@ -38,11 +38,6 @@ def search(username: str = Query(...),limit:int=9,offset:int=0, db: Session = De
     total,posts=crud.search_post_by_username(username, limit, offset,db)
     return {"total": total, "posts": posts}
 
-
-# @router.get("/users/{username}", response_model=List[schema.PostInfo])
-# def userposts(username: str, db: Session = Depends(get_db)):
-#     user_posts = crud.read_post_by_username(username, db)
-#     return user_posts
 
 @router.get("/{post_id}", response_model=schema.PostDetail)
 def read_post(post_id: int, db: Session = Depends(get_db)):
@@ -55,7 +50,7 @@ def delete_post(post_id: int, request: schema.DeleteRequest, db: Session = Depen
     else:
         return {"success": False, "message": "Incorrect password"}
 
-@router.post("/photo")
+@router.post("/photo") #네이버 ocr 에 사진 업로드 후 텍스트 추출
 async def upload_photo(file: UploadFile = File(...)):
     try:
         # 파일 읽기

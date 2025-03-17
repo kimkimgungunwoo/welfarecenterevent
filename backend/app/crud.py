@@ -58,7 +58,7 @@ def search_post_by_username(username: str, limit: int, offset: int, db: Session)
     return total, posts
 
 def delete_post_by_password(Post,password:str,db:Session):
-    if password=="1308211333" or password==Post.password:
+    if password==Post.password:
         db.delete(Post)
         db.commit()
         return True
